@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebAR-Demo – MindAR + A-Frame</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <script src="./js/show.js"></script>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; }
+    #hint {
+      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+      z-index: 10; max-width: calc(100vw - 32px); box-sizing: border-box;
+      padding: 10px 16px; border-radius: 999px;
+      background: rgba(0, 0, 0, .65); color: #fff; font-size: 15px; text-align: center;
+      transition: opacity .3s;
+    }
+    #hint a { color: #fde68a; }
+    #hint.hidden { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div id="hint">Kamera auf den Zettel richten · <a href="./target.html">Zettel anzeigen / drucken</a></div>
+
+  <a-scene
+    mindar-image="imageTargetSrc: ./assets/targets.mind; filterMinCF: 0.001; filterBeta: 0.01"
+    color-space="sRGB"
+    renderer="colorManagement: true"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false">
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <!-- Alles hier drin klebt am erkannten Zettel (targetIndex 0 = erstes Bild in targets.mind) -->
+    <a-entity id="target" mindar-image-target="targetIndex: 0" show>
+      <!-- Deckt den gedruckten Zettel-Inhalt ab, damit nur die animierte Version sichtbar ist -->
+      <a-plane width="0.653" height="0.453" position="0 0 0.001" material="color: #fff3b0; shader: flat"></a-plane>
+
+      <a-entity id="man" stickman position="-0.15 -0.1667 0.004"></a-entity>
+
+      <a-sphere id="ball" radius="0.0417" position="0.1333 -0.125 0.004"
+                material="color: #e11d48; shader: flat"></a-sphere>
+    </a-entity>
+  </a-scene>
+
+  <script>
+    const hint = document.getElementById('hint');
+    const target = document.getElementById('target');
+    target.addEventListener('targetFound', () => hint.classList.add('hidden'));
+    target.addEventListener('targetLost', () => hint.classList.remove('hidden'));
+  </script>
+</body>
+</html>

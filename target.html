@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zettel – WebAR-Demo</title>
+  <style>
+    body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; text-align: center; background: #fff; color: #111; }
+    img { max-width: 100%; max-height: 80vh; }
+    @media print { .no-print { display: none; } img { max-height: none; width: 100%; } }
+  </style>
+</head>
+<body>
+  <p class="no-print">
+    Diesen Zettel ausdrucken oder am Bildschirm lassen und mit dem Handy die
+    <a href="./index.html">AR-Ansicht</a> darauf richten.
+    <button onclick="window.print()">Drucken</button>
+  </p>
+  <img src="./assets/target.png" alt="AR-Zettel mit Strichmännchen und rotem Punkt">
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "web-ar-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WebAR-Demo mit MindAR + A-Frame: Strichmännchen winkt, roter Punkt hüpft weg",
+  "type": "module",
+  "scripts": {
+    "start": "http-server -c-1 -p 8080",
+    "cert": "openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj /CN=web-ar-demo",
+    "https": "http-server -S -C cert.pem -K key.pem -c-1 -p 8443",
+    "build:target": "node tools/build-target.mjs"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "puppeteer-core": "^23.0.0"
+  }
+}

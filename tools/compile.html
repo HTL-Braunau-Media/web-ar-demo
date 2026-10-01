@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Target kompilieren</title>
+  <style>body { font-family: system-ui, sans-serif; margin: 2rem; } img { max-width: 480px; border: 1px solid #ccc; }</style>
+</head>
+<body>
+  <h1>target.svg → target.png + targets.mind</h1>
+  <p id="status">Lade …</p>
+  <img id="preview" alt="">
+  <p><a id="dl-png" download="target.png"></a> <a id="dl-mind" download="targets.mind"></a></p>
+
+  <script type="module">
+    import { Compiler } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js';
+
+    const status = document.getElementById('status');
+
+    const img = new Image();
+    img.src = '../assets/target.svg';
+    await img.decode();
+
+    // SVG auf Canvas rastern -> PNG (zum Drucken und als Compiler-Eingabe)
+    const canvas = document.createElement('canvas');
+    canvas.width = 1200;
+    canvas.height = 900;
+    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+    const pngUrl = canvas.toDataURL('image/png');
+    document.getElementById('preview').src = pngUrl;
+
+    const png = new Image();
+    png.src = pngUrl;
+    await png.decode();
+
+    const compiler = new Compiler();
+    await compiler.compileImageTargets([png], (p) => {
+      status.textContent = `Kompiliere … ${p.toFixed(0)} %`;
+    });
+    const mind = await compiler.exportData();
+
+    const a1 = document.getElementById('dl-png');
+    a1.href = pngUrl;
+    a1.textContent = 'target.png herunterladen';
+    const a2 = document.getElementById('dl-mind');
+    a2.href = URL.createObjectURL(new Blob([mind]));
+    a2.textContent = 'targets.mind herunterladen';
+    status.textContent = 'Fertig – beide Dateien nach assets/ legen.';
+
+    // Für das automatische Build-Script (tools/build-target.mjs)
+    window.__result = { png: pngUrl, mind: Array.from(new Uint8Array(mind)) };
+  </script>
+</body>
+</html>
